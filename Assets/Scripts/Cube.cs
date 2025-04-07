@@ -6,18 +6,19 @@ public class Cube : MonoBehaviour
 {
     [SerializeField] private Renderer _renderere;
 
-    public event Action<Cube> OnDestroed;
+    public event Action<Cube> Destroed;
 
+    public Rigidbody Rigidbody { get; private set; }
     public float SplitChance { get; private set; } = 100f;
+
+    private void Awake()
+    {
+        Rigidbody = GetComponent<Rigidbody>();
+    }
 
     private void Start()
     {
         ChangeRandomColor();
-    }
-
-    private void ChangeRandomColor()
-    {
-        _renderere.material.color = UnityEngine.Random.ColorHSV();
     }
 
     public void SetSplitChance(float splitChance)
@@ -27,12 +28,17 @@ public class Cube : MonoBehaviour
     
     public Rigidbody GetRigidbody()
     {
-        return GetComponent<Rigidbody>();
+        return Rigidbody;
     }
 
-    public void HandleDestruction()
+    public void DestroyWithEvent()
     {
-        OnDestroed?.Invoke(this);
+        Destroed?.Invoke(this);
         Destroy(gameObject);
+    }
+
+    private void ChangeRandomColor()
+    {
+        _renderere.material.color = UnityEngine.Random.ColorHSV();
     }
 }

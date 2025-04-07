@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,23 +6,23 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] private Cube[] _cubes;
 
-    public event Action<List<Cube>, Vector3> OnSpawn;
+    public event Action<List<Cube>, Vector3> Spawned;
 
     private void OnEnable()
     {
         foreach (Cube cube in _cubes)
-            cube.OnDestroed += Split;
+            cube.Destroed += Split;
     }
 
     private void OnDisable()
     {
         foreach (Cube cube in _cubes)
-            cube.OnDestroed -= Split;
+            cube.Destroed -= Split;
     }
 
     private void Split(Cube cube)
     {
-        if (ShouldSplit(cube) == false)
+        if (!ShouldSplit(cube))
             CreateNewCubs(cube);
     }
 
@@ -48,21 +48,21 @@ public class Spawner : MonoBehaviour
 
             cubes.Add(cube);
 
-            cube.OnDestroed += OnCubeDestroed;
+            cube.Destroed += OnCubeDestroed;
         }
 
-        OnSpawn?.Invoke(cubes, cubePrefab.transform.localPosition);
+        Spawned?.Invoke(cubes, cubePrefab.transform.localPosition);
     }
 
     private void OnCubeDestroed(Cube cube)
     {
-        if (ShouldSplit(cube) == false)
+        if (!ShouldSplit(cube))
             CreateNewCubs(cube);
 
-        cube.OnDestroed -= OnCubeDestroed;
+        cube.Destroed -= OnCubeDestroed;
     }
 
-    private float GetHalfSplitChance(Cube cube) 
+    private float GetHalfSplitChance(Cube cube)
     {
         return cube.SplitChance * 0.5f;
     }
