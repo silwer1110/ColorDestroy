@@ -5,21 +5,21 @@ public class Explouder : MonoBehaviour
 {
     [SerializeField] private Spawner spawner;
 
-    private float explosionForce = 15f;
-    private float explosionRadius = 20f;
-
     private void OnEnable()
     {
-        spawner.OnSpawn += Explode;
+        spawner.Spawned += ExplodeSelective;
     }
 
     private void OnDisable()
     {
-        spawner.OnSpawn -= Explode;
+        spawner.Spawned -= ExplodeSelective;
     }
 
-    private void Explode(List<Cube> cubes, Vector3 position)
+    private void ExplodeSelective(List<Cube> cubes, Vector3 position)
     {
+        float explosionForce = 15f;
+        float explosionRadius = 20f;
+
         foreach (Cube cube in cubes)
         {
             cube.GetRigidbody().AddExplosionForce(explosionForce, position, explosionRadius);
