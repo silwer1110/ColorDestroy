@@ -12,7 +12,7 @@ public class RayCaster : MonoBehaviour
             {
                 if (hitInfo.collider.TryGetComponent(out Cube cube))
                 {
-                    cube.DestroyWithEvent();
+                    cube.Destroy();
                 }
             }
         }

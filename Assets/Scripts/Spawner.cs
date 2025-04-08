@@ -6,7 +6,8 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] private Cube[] _cubes;
 
-    public event Action<List<Cube>, Vector3> Spawned;
+    public event Action<List<Rigidbody>, Vector3> Spawned;
+    public event Action<Cube> NotSpawned;
 
     private void OnEnable()
     {
@@ -22,13 +23,15 @@ public class Spawner : MonoBehaviour
 
     private void Split(Cube cube)
     {
-        if (!ShouldSplit(cube))
+        if (ShouldSplit(cube) == false)
             CreateNewCubs(cube);
+        else
+            NotSpawned?.Invoke(cube);
     }
 
     private void CreateNewCubs(Cube cubePrefab)
     {
-        List<Cube> cubes = new();
+        List<Rigidbody> rigidbodys = new();
 
         int cubeCount;
 
@@ -46,18 +49,20 @@ public class Spawner : MonoBehaviour
 
             cube.SetSplitChance(GetHalfSplitChance(cubePrefab));
 
-            cubes.Add(cube);
+            rigidbodys.Add(cube.Rigidbody);
 
             cube.Destroed += OnCubeDestroed;
         }
 
-        Spawned?.Invoke(cubes, cubePrefab.transform.localPosition);
+        Spawned?.Invoke(rigidbodys, cubePrefab.transform.localPosition);
     }
 
     private void OnCubeDestroed(Cube cube)
     {
-        if (!ShouldSplit(cube))
+        if (ShouldSplit(cube) == false)
             CreateNewCubs(cube);
+        else
+            NotSpawned?.Invoke(cube);
 
         cube.Destroed -= OnCubeDestroed;
     }

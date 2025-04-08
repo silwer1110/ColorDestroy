@@ -25,13 +25,8 @@ public class Cube : MonoBehaviour
     {
         SplitChance = splitChance;
     }
-    
-    public Rigidbody GetRigidbody()
-    {
-        return Rigidbody;
-    }
-
-    public void DestroyWithEvent()
+   
+    public void Destroy()
     {
         Destroed?.Invoke(this);
         Destroy(gameObject);
